@@ -1,5 +1,5 @@
-#ifndef LOX_H_
-#define LOX_H_
+#ifndef __LOX_H__
+#define __LOX_H__
 
 #include <iostream>
 #include <string>
@@ -25,4 +25,5 @@ class Lox {
 };
 
 }  // namespace lox
-#endif  // LOX_H_
+
+#endif  // __LOX_H__
