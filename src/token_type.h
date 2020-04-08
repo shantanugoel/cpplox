@@ -50,7 +50,7 @@ enum class TokenType {
   VAR,
   WHILE,
 
-  EOF
+  // EOF
 };
 
 }  // namespace lox

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "token_type.h"
+
 namespace lox {
 
 void Lox::Run(const std::string& source) { (void)source; }
