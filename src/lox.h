@@ -8,7 +8,10 @@ namespace lox {
 class Lox {
  public:
   void RunPrompt(void);
-  void RunFile(std::string_view path);
+  void RunFile(const std::string& path);
+
+ private:
+  void Run(const std::string& source);
 };
 
 }  // namespace lox
