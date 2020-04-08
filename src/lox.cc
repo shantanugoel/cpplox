@@ -30,6 +30,10 @@ void Lox::RunPrompt() {
     std::cout << "> ";
     std::getline(std::cin, line);
     Run(line);
+
+    // Reset the error flag in interactive loop so if a user makes a mistake,
+    // it shouldn't kill the entire session.
+    had_error_ = false;
   }
 }
 
