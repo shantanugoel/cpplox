@@ -2,55 +2,60 @@
 #define __TOKEN_TYPE_H__
 
 namespace lox {
+namespace token_type_internal {
+#define TOKEN_TYPE_STRING(type) #type
+#define TOKEN_TYPES \
+  X(LeftParen)      \
+  X(RightParen)     \
+  X(LeftBrace)      \
+  X(RightBrace)     \
+  X(Comma)          \
+  X(Dot)            \
+  X(Minus)          \
+  X(Plus)           \
+  X(Semicolon)      \
+  X(Slash)          \
+  X(Star)           \
+  X(Bang)           \
+  X(Bang_equal)     \
+  X(Equal)          \
+  X(Equal_equal)    \
+  X(Greater)        \
+  X(Greater_equal)  \
+  X(Less)           \
+  X(Less_equal)     \
+  X(Identifier)     \
+  X(String)         \
+  X(Number)         \
+  X(And)            \
+  X(Class)          \
+  X(Else)           \
+  X(False)          \
+  X(Fun)            \
+  X(For)            \
+  X(If)             \
+  X(Nil)            \
+  X(Or)             \
+  X(Print)          \
+  X(Return)         \
+  X(Super)          \
+  X(This)           \
+  X(True)           \
+  X(Var)            \
+  X(While)          \
+  X(Eof)
+};  // namespace token_type_internal
 
 enum class TokenType {
-  // Single-character tokens.
-  LEFT_PAREN,
-  RIGHT_PAREN,
-  LEFT_BRACE,
-  RIGHT_BRACE,
-  COMMA,
-  DOT,
-  MINUS,
-  PLUS,
-  SEMICOLON,
-  SLASH,
-  STAR,
+#define X(enumval) enumval,
+  TOKEN_TYPES
+#undef X
+};
 
-  // One or two character tokens.
-  BANG,
-  BANG_EQUAL,
-  EQUAL,
-  EQUAL_EQUAL,
-  GREATER,
-  GREATER_EQUAL,
-  LESS,
-  LESS_EQUAL,
-
-  // Literals.
-  IDENTIFIER,
-  STRING,
-  NUMBER,
-
-  // Keywords.
-  AND,
-  CLASS,
-  ELSE,
-  FALSE,
-  FUN,
-  FOR,
-  IF,
-  NIL,
-  OR,
-  PRINT,
-  RETURN,
-  SUPER,
-  THIS,
-  TRUE,
-  VAR,
-  WHILE,
-
-  // EOF
+static std::string TokenTypeName[] = {
+#define X(enumval) TOKEN_TYPE_STRING(enumval),
+    TOKEN_TYPES
+#undef X
 };
 
 }  // namespace lox

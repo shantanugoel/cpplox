@@ -14,13 +14,15 @@ using Object = std::variant<std::string, double, bool>;
 
 class Token {
  public:
+  Token() = delete;
   Token(const TokenType type, const std::string& lexeme, const Object& literal,
         const int line)
       : type_(type), lexeme_(lexeme), literal_(literal), line_(line) {}
 
   std::string ToString() {
     // TODO: convert type as well as part of this.
-    return lexeme_ + " " + std::visit(Visitor{}, literal_);
+    return TokenTypeName[static_cast<size_t>(type_)] + lexeme_ + " " +
+           std::visit(Visitor{}, literal_);
   }
 
  private:
