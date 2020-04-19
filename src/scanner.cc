@@ -19,8 +19,8 @@ void Scanner::AddToken(TokenType type, Object literal) {
 }
 
 void Scanner::String() {
-  while (peek() != '"' && !IsAtEnd()) {
-    if (peek() == '\n') line_++;
+  while (Peek() != '"' && !IsAtEnd()) {
+    if (Peek() == '\n') line_++;
     Advance();
   }
 
@@ -36,6 +36,18 @@ void Scanner::String() {
   // Trim surrounding quotes
   std::string value = source_.substr(start_ + 1, current_ - 1);
   AddToken(TokenType::String, value);
+}
+
+void Scanner::Number() {
+  while (IsDigit(Peek())) Advance();
+
+  // Look for fractional part.
+  if (Peek() == '.' && IsDigit(PeekNext())) {
+    // Consume the dot
+    Advance();
+    while (IsDigit(Peek())) Advance();
+  }
+  AddToken(TokenType::Number, std::stod(source_.substr(start_, current_)));
 }
 
 void Scanner::ScanToken() {
@@ -92,7 +104,7 @@ void Scanner::ScanToken() {
       if (match('/')) {
         // Found a comment, so go till end of line. No need to call AddToken
         // since comments don't need to be parsed/executed.
-        while (peek() != '\n' && ~IsAtEnd()) Advance();
+        while (Peek() != '\n' && ~IsAtEnd()) Advance();
       } else {
         AddToken(TokenType::Slash);
       }
@@ -113,9 +125,14 @@ void Scanner::ScanToken() {
       break;
 
     default:
-      // Log error but keep scanning to get as many errors as possible in one
-      // go.
-      Lox::Error(line_, "Unexpected character.");
+      // Number literals
+      if (IsDigit(c)) {
+        Number();
+      } else {
+        // Log error but keep scanning to get as many errors as possible in one
+        // go.
+        Lox::Error(line_, "Unexpected character.");
+      }
       break;
   }
 }
