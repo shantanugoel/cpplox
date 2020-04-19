@@ -67,6 +67,26 @@ void Scanner::ScanToken() {
       AddToken(match('=') ? TokenType::GreaterEqual : TokenType::Greater);
       break;
 
+    // Longer lexemes
+    case '/':
+      if (match('/')) {
+        // Found a comment, so go till end of line. No need to call AddToken
+        // since comments don't need to be parsed/executed.
+        while (peek() != '\n' && ~IsAtEnd()) Advance();
+      } else {
+        AddToken(TokenType::Slash);
+      }
+      break;
+
+    // Skippable characters/whitespace
+    case ' ':
+    case '\r':
+    case '\t':
+      break;
+    case '\n':
+      line_++;
+      break;
+
     default:
       // Log error but keep scanning to get as many errors as possible in one
       // go.

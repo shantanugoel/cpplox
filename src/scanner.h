@@ -33,6 +33,10 @@ class Scanner {
     current_++;
     return true;
   }
+  char peek() {
+    if (IsAtEnd()) return '\0';
+    return source_[current_];
+  }
 
   char Advance() {
     current_++;
