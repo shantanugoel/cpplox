@@ -10,10 +10,28 @@ cc_library(
 )
 
 cc_library(
+    name = "scanner",
+    srcs = ["scanner.cc"],
+    hdrs = ["scanner.h"],
+    deps = [
+        "logger",
+        "token",
+    ],
+)
+
+cc_library(
+    name = "logger",
+    srcs = ["logger.cc"],
+    hdrs = ["logger.h"],
+)
+
+cc_library(
     name = "lox",
     srcs = ["lox.cc"],
     hdrs = ["lox.h"],
     deps = [
+        "logger",
+        "scanner",
         "token",
     ],
 )

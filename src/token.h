@@ -20,8 +20,8 @@ class Token {
       : type_(type), lexeme_(lexeme), literal_(literal), line_(line) {}
 
   std::string ToString() {
-    // TODO: convert type as well as part of this.
-    return TokenTypeName[static_cast<size_t>(type_)] + lexeme_ + " " +
+    return "Line " + std::to_string(line_) + ": " +
+           TokenTypeName[static_cast<size_t>(type_)] + " " + lexeme_ + " " +
            std::visit(Visitor{}, literal_);
   }
 
@@ -39,7 +39,10 @@ class Token {
   }
 
   struct Visitor {
-    std::string operator()(std::nullptr_t x) { return "null"; };
+    std::string operator()(std::nullptr_t x) {
+      (void)x;  // Avoid unused parameter error
+      return "null";
+    };
     std::string operator()(double x) const { return VisitorHelper(x); }
     std::string operator()(bool x) const { return VisitorHelper(x); }
     std::string operator()(std::string x) const { return VisitorHelper(x); }

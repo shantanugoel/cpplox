@@ -1,13 +1,13 @@
 #include "scanner.h"
 
-#include <unordered_map>
+#include <map>
 
-#include "lox.h"
+#include "logger.h"
 
 namespace lox {
 
 namespace {
-static const std::unordered_map<const std::string, TokenType> keywords = {
+static const std::map<const std::string, TokenType> keywords = {
     {"and", TokenType::And},       {"class", TokenType::Class},
     {"else", TokenType::Else},     {"false", TokenType::False},
     {"for", TokenType::For},       {"fun", TokenType::Fun},
@@ -20,9 +20,9 @@ static const std::unordered_map<const std::string, TokenType> keywords = {
 }  // namespace
 
 std::vector<Token> Scanner::ScanTokens() {
-  while (~IsAtEnd()) {
+  while (!IsAtEnd()) {
     start_ = current_;
-    ScanTokens();
+    ScanToken();
   }
   tokens_.emplace_back(Token(TokenType::Eof, "", nullptr, line_));
   return tokens_;
@@ -40,16 +40,16 @@ void Scanner::String() {
   }
 
   /// Unterminated String
-  if (!IsAtEnd()) {
-    Lox::Error(line_, "Unterminated String.");
+  if (IsAtEnd()) {
+    Logger::Error(line_, "Unterminated String.");
     return;
   }
 
+  // Trim surrounding quotes
+  std::string value = source_.substr(start_ + 1, current_ - start_ - 1);
   // The closing ".
   Advance();
 
-  // Trim surrounding quotes
-  std::string value = source_.substr(start_ + 1, current_ - 1);
   AddToken(TokenType::String, value);
 }
 
@@ -62,7 +62,8 @@ void Scanner::Number() {
     Advance();
     while (IsDigit(Peek())) Advance();
   }
-  AddToken(TokenType::Number, std::stod(source_.substr(start_, current_)));
+  AddToken(TokenType::Number,
+           std::stod(source_.substr(start_, current_ - start_)));
 }
 
 void Scanner::Identifier() {
@@ -70,7 +71,7 @@ void Scanner::Identifier() {
 
   // See if the identifier isa  reserved word.
   TokenType type = TokenType::Identifier;
-  auto result = keywords.find(source_.substr(start_, current_));
+  auto result = keywords.find(source_.substr(start_, current_ - start_));
   if (result != keywords.end()) {
     type = result->second;
   }
@@ -160,7 +161,8 @@ void Scanner::ScanToken() {
       } else {
         // Log error but keep scanning to get as many errors as possible in one
         // go.
-        Lox::Error(line_, "Unexpected character.");
+        std::cout << source_[current_] << "\n";
+        Logger::Error(line_, "Unexpected character.");
       }
       break;
   }

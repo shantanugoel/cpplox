@@ -13,16 +13,16 @@ class Scanner {
  public:
   Scanner() = delete;
   Scanner(std::string source) : source_(source) {}
-  std::vector<Token> ScanTokens() {}
+  std::vector<Token> ScanTokens();
 
  private:
   std::string source_;
   std::vector<Token> tokens_;
 
   // Variables to track state of scanning.
-  int start_ = 0;
-  int current_ = 0;
-  int line_ = 1;
+  unsigned long start_ = 0;
+  unsigned long current_ = 0;
+  unsigned long line_ = 1;
 
   void ScanToken();
   void AddToken(TokenType type) { AddToken(type, nullptr); }
@@ -55,7 +55,7 @@ class Scanner {
     return source_[current_ - 1];
   }
 
-  bool IsAtEnd() { return current_ >= source_.length; }
+  bool IsAtEnd() { return current_ >= source_.length(); }
 };
 
 }  // namespace lox

@@ -4,11 +4,20 @@
 #include <iostream>
 #include <string>
 
+#include "logger.h"
+#include "scanner.h"
 #include "token_type.h"
 
 namespace lox {
 
-void Lox::Run(const std::string& source) { (void)source; }
+void Lox::Run(const std::string& source) {
+  Scanner scanner(source);
+  std::vector<Token> tokens = scanner.ScanTokens();
+  std::cout << "Tokens identified:\n";
+  for (auto& token : tokens) {
+    std::cout << token.ToString() << "\n";
+  }
+}
 
 void Lox::RunFile(const std::string& path) {
   std::string source;
@@ -35,7 +44,7 @@ void Lox::RunPrompt() {
 
     // Reset the error flag in interactive loop so if a user makes a mistake,
     // it shouldn't kill the entire session.
-    had_error_ = false;
+    Logger::had_error_ = false;
   }
 }
 
