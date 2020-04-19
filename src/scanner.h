@@ -19,7 +19,27 @@ class Scanner {
   std::string source_;
   std::vector<Token> tokens_;
 
-  void scanToken();
+  // Variables to track state of scanning.
+  int start_ = 0;
+  int current_ = 0;
+  int line_ = 1;
+
+  void ScanToken();
+  void AddToken(TokenType type) { AddToken(type, nullptr); }
+  void AddToken(TokenType type, Object literal);
+  bool match(char expected) {
+    if (IsAtEnd()) return false;
+    if (source_[current_] != expected) return false;
+    current_++;
+    return true;
+  }
+
+  char Advance() {
+    current_++;
+    return source_[current_ - 1];
+  }
+
+  bool IsAtEnd() { return current_ >= source_.length; }
 };
 
 }  // namespace lox

@@ -10,7 +10,7 @@
 namespace lox {
 
 // TODO: Update the possible variants here as we go.
-using Object = std::variant<std::string, double, bool>;
+using Object = std::variant<std::nullptr_t, std::string, double, bool>;
 
 class Token {
  public:
@@ -39,6 +39,7 @@ class Token {
   }
 
   struct Visitor {
+    std::string operator()(std::nullptr_t x) { return "null"; };
     std::string operator()(double x) const { return VisitorHelper(x); }
     std::string operator()(bool x) const { return VisitorHelper(x); }
     std::string operator()(std::string x) const { return VisitorHelper(x); }

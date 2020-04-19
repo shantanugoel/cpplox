@@ -10,15 +10,16 @@ class Lox {
  public:
   void RunPrompt(void);
   void RunFile(const std::string& path);
-  void Error(int line, const std::string& message) {
+  static void Error(int line, const std::string& message) {
     Report(line, "", message);
   }
 
-  bool had_error_ = false;
+  static bool had_error_;
 
  private:
   void Run(const std::string& source);
-  void Report(int line, const std::string& where, const std::string& message) {
+  static void Report(int line, const std::string& where,
+                     const std::string& message) {
     std::cerr << "[Line " << line << "] Error " << where << ": " << message;
     had_error_ = true;
   }

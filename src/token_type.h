@@ -17,13 +17,13 @@ namespace token_type_internal {
   X(Slash)          \
   X(Star)           \
   X(Bang)           \
-  X(Bang_equal)     \
+  X(BangEqual)      \
   X(Equal)          \
-  X(Equal_equal)    \
+  X(EqualEqual)     \
   X(Greater)        \
-  X(Greater_equal)  \
+  X(GreaterEqual)   \
   X(Less)           \
-  X(Less_equal)     \
+  X(LessEqual)      \
   X(Identifier)     \
   X(String)         \
   X(Number)         \
