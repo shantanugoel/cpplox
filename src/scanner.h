@@ -29,6 +29,7 @@ class Scanner {
   void AddToken(TokenType type, Object literal);
   void String();
   void Number();
+  void Identifier();
   bool match(char expected) {
     if (IsAtEnd()) return false;
     if (source_[current_] != expected) return false;
@@ -44,6 +45,10 @@ class Scanner {
     return source_[current_ + 1];
   }
   bool IsDigit(char c) { return c >= '0' && c <= '9'; }
+  bool IsAlpha(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  }
+  bool IsAlphaNumeric(char c) { return IsAlpha(c) || IsDigit(c); }
 
   char Advance() {
     current_++;

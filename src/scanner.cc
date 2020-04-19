@@ -1,8 +1,23 @@
 #include "scanner.h"
 
+#include <unordered_map>
+
 #include "lox.h"
 
 namespace lox {
+
+namespace {
+static const std::unordered_map<const std::string, TokenType> keywords = {
+    {"and", TokenType::And},       {"class", TokenType::Class},
+    {"else", TokenType::Else},     {"false", TokenType::False},
+    {"for", TokenType::For},       {"fun", TokenType::Fun},
+    {"if", TokenType::If},         {"nil", TokenType::Nil},
+    {"or", TokenType::Or},         {"print", TokenType::Print},
+    {"return", TokenType::Return}, {"super", TokenType::Super},
+    {"this", TokenType::This},     {"true", TokenType::True},
+    {"var", TokenType::Var},       {"while", TokenType::While},
+};
+}  // namespace
 
 std::vector<Token> Scanner::ScanTokens() {
   while (~IsAtEnd()) {
@@ -48,6 +63,18 @@ void Scanner::Number() {
     while (IsDigit(Peek())) Advance();
   }
   AddToken(TokenType::Number, std::stod(source_.substr(start_, current_)));
+}
+
+void Scanner::Identifier() {
+  while (IsAlphaNumeric(Peek())) Advance();
+
+  // See if the identifier isa  reserved word.
+  TokenType type = TokenType::Identifier;
+  auto result = keywords.find(source_.substr(start_, current_));
+  if (result != keywords.end()) {
+    type = result->second;
+  }
+  AddToken(type);
 }
 
 void Scanner::ScanToken() {
@@ -128,6 +155,8 @@ void Scanner::ScanToken() {
       // Number literals
       if (IsDigit(c)) {
         Number();
+      } else if (IsAlpha(c)) {
+        Identifier();
       } else {
         // Log error but keep scanning to get as many errors as possible in one
         // go.
@@ -135,6 +164,6 @@ void Scanner::ScanToken() {
       }
       break;
   }
-}
+}  // namespace lox
 
 }  // namespace lox
