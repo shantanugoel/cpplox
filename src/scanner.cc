@@ -161,8 +161,10 @@ void Scanner::ScanToken() {
       } else {
         // Log error but keep scanning to get as many errors as possible in one
         // go.
-        std::cout << source_[current_] << "\n";
-        Logger::Error(line_, "Unexpected character.");
+        std::ostringstream message;
+        message << "Unexpected character: " << c
+                << " at column num: " << current_;
+        Logger::Error(line_, message.str());
       }
       break;
   }
