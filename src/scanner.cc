@@ -18,6 +18,26 @@ void Scanner::AddToken(TokenType type, Object literal) {
   tokens_.emplace_back(Token(type, text, literal, line_));
 }
 
+void Scanner::String() {
+  while (peek() != '"' && !IsAtEnd()) {
+    if (peek() == '\n') line_++;
+    Advance();
+  }
+
+  /// Unterminated String
+  if (!IsAtEnd()) {
+    Lox::Error(line_, "Unterminated String.");
+    return;
+  }
+
+  // The closing ".
+  Advance();
+
+  // Trim surrounding quotes
+  std::string value = source_.substr(start_ + 1, current_ - 1);
+  AddToken(TokenType::String, value);
+}
+
 void Scanner::ScanToken() {
   char c = Advance();
   switch (c) {
@@ -85,6 +105,11 @@ void Scanner::ScanToken() {
       break;
     case '\n':
       line_++;
+      break;
+
+    // Literals
+    case '"':
+      String();
       break;
 
     default:

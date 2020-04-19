@@ -27,6 +27,7 @@ class Scanner {
   void ScanToken();
   void AddToken(TokenType type) { AddToken(type, nullptr); }
   void AddToken(TokenType type, Object literal);
+  void String();
   bool match(char expected) {
     if (IsAtEnd()) return false;
     if (source_[current_] != expected) return false;
