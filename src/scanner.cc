@@ -115,24 +115,32 @@ void Scanner::ScanToken() {
 
     // Single / Double character lexemes
     case '!':
-      AddToken(match('=') ? TokenType::BangEqual : TokenType::Bang);
+      AddToken(Match('=') ? TokenType::BangEqual : TokenType::Bang);
       break;
     case '=':
-      AddToken(match('=') ? TokenType::EqualEqual : TokenType::Equal);
+      AddToken(Match('=') ? TokenType::EqualEqual : TokenType::Equal);
       break;
     case '<':
-      AddToken(match('=') ? TokenType::LessEqual : TokenType::Less);
+      AddToken(Match('=') ? TokenType::LessEqual : TokenType::Less);
       break;
     case '>':
-      AddToken(match('=') ? TokenType::GreaterEqual : TokenType::Greater);
+      AddToken(Match('=') ? TokenType::GreaterEqual : TokenType::Greater);
       break;
 
     // Longer lexemes
     case '/':
-      if (match('/')) {
+      if (Match('/')) {
         // Found a comment, so go till end of line. No need to call AddToken
         // since comments don't need to be parsed/executed.
-        while (Peek() != '\n' && ~IsAtEnd()) Advance();
+        while (Peek() != '\n' && !IsAtEnd()) Advance();
+      } else if (Match('*')) {
+        while (!IsAtEnd()) {
+          if (Match('\n')) {
+            line_++;
+          }
+          if (Match('*') && Match('/')) break;
+          Advance();
+        }
       } else {
         AddToken(TokenType::Slash);
       }
@@ -159,8 +167,8 @@ void Scanner::ScanToken() {
       } else if (IsAlpha(c)) {
         Identifier();
       } else {
-        // Log error but keep scanning to get as many errors as possible in one
-        // go.
+        // Log error but keep scanning to get as many errors as possible in
+        // one go.
         std::ostringstream message;
         message << "Unexpected character: " << c
                 << " at column num: " << current_;

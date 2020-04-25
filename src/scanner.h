@@ -30,7 +30,7 @@ class Scanner {
   void String();
   void Number();
   void Identifier();
-  bool match(char expected) {
+  bool Match(char expected) {
     if (IsAtEnd()) return false;
     if (source_[current_] != expected) return false;
     current_++;
