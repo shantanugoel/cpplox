@@ -47,4 +47,12 @@ cc_binary(
 cc_binary(
     name = "ast_generator",
     srcs = ["ast_generator.cc"],
+    copts = ["-std=c++17"],
+)
+
+genrule(
+    name = "ast",
+    outs = ["Expr.h"],
+    cmd = "./$(location :ast_generator) > $@",
+    tools = [":ast_generator"],
 )
