@@ -53,7 +53,7 @@ cc_binary(
 
 genrule(
     name = "generate_ast",
-    outs = ["Expr.h"],
+    outs = ["expr.h"],
     cmd = "./$(location :ast_generator) > $@",
     tools = [":ast_generator"],
 )
