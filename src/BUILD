@@ -43,3 +43,8 @@ cc_binary(
         ":lox",
     ],
 )
+
+cc_binary(
+    name = "ast_generator",
+    srcs = ["ast_generator.cc"],
+)
