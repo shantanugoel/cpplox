@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -45,7 +46,7 @@ void DefineType(std::ofstream& of, const std::string& base_name,
   } while (delimiter_loc != -1);
 
   of << " {}\n";
-  of << " \nprivate:\n";
+  of << "\n private:\n";
   of << private_members.str();
   of << "};\n";
 }
@@ -68,7 +69,14 @@ void DefineAst(std::string_view output_dir, const std::string& base_name,
   if (!of.is_open()) {
     std::cerr << std::strerror(errno);
   } else {
+    std::string file_header_temp;
+    file_header_temp.resize(base_name.length());
+    std::transform(base_name.begin(), base_name.end(), file_header_temp.begin(),
+                   ::toupper);
     of << "// Auto Generated file. Do not edit by hand.\n";
+    of << "#ifndef _" << file_header_temp << "_H_\n";
+    of << "#define _" << file_header_temp << "_H_\n";
+    of << "namespace lox {\n";
     of << "#include \"token.h\"\n";
     of << "class " << base_name << " {\n";
     of << "};\n";
@@ -79,6 +87,9 @@ void DefineAst(std::string_view output_dir, const std::string& base_name,
       std::string fields = trim(type.substr(delimiter_location + 1));
       DefineType(of, base_name, class_name, fields);
     }
+
+    of << "}  // namespace lox\n";
+    of << "#endif\n";
     of.close();
   }
   return;
