@@ -30,6 +30,7 @@ cc_library(
     srcs = ["lox.cc"],
     hdrs = ["lox.h"],
     deps = [
+        "ast",
         "logger",
         "scanner",
         "token",
@@ -51,8 +52,16 @@ cc_binary(
 )
 
 genrule(
-    name = "ast",
+    name = "generate_ast",
     outs = ["Expr.h"],
     cmd = "./$(location :ast_generator) > $@",
     tools = [":ast_generator"],
+)
+
+cc_library(
+    name = "ast",
+    hdrs = [":generate_ast"],
+    deps = [
+        ":token",
+    ],
 )
