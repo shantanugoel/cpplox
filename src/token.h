@@ -19,7 +19,7 @@ class Token {
         const int line)
       : type_(type), lexeme_(lexeme), literal_(literal), line_(line) {}
 
-  std::string ToString() {
+  std::string ToString() const {
     return "Line " + std::to_string(line_) + ": " +
            TokenTypeName[static_cast<size_t>(type_)] + " " + lexeme_ + " " +
            std::visit(Visitor{}, literal_);

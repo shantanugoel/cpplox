@@ -50,7 +50,7 @@ void DefineType(std::ostream& os, const std::string& base_name,
   // os << "    return visitor.visit" << class_name << base_name <<
   // "(*this);\n"; os << "  }\n";
 
-  os << "\n private:\n";
+  // os << "\n private:\n";
   os << private_members.str();
   os << "};\n";
 }
@@ -69,7 +69,7 @@ void DefineVisitor(std::ostream& os, const std::string& base_name,
   os << "class " << base_name << "Visitor {\n";
   os << " public:\n";
   for (auto& type_name : type_names) {
-    os << "  virtual T visit(" << type_name << ") = 0;\n";
+    os << "  virtual T visit(const " << type_name << "&) = 0;\n";
   }
   // for (auto& type_name : type_names) {
   //   os << "  virtual T visit" << type_name << base_name << "(" << type_name
@@ -96,7 +96,7 @@ void DefineAst(const std::string& base_name,
   os << " public:\n";
   os << "  template <typename T>\n";
   // os << "  virtual T accept(" << base_name << "Visitor<T> visitor) = 0;\n";
-  os << "  T accept(" << base_name << "Visitor<T> visitor) {\n";
+  os << "  T accept(" << base_name << "Visitor<T>& visitor) {\n";
   os << "    return visitor.visit(*this);\n";
   os << "  }\n";
   os << "};\n";
