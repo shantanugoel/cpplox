@@ -39,13 +39,33 @@ void DefineType(std::ostream& os, const std::string& base_name,
     if (delimiter_loc_prev != 0) {
       os << ", ";
     }
+    // DesignPrinter();
     os << field_name << "(" << field_name << ")";
     private_members << "  " << field_type << " " << field_name << ";\n";
   } while (delimiter_loc != -1);
-
   os << " {}\n";
+
+  os << "\n  template <typename T>\n";
+  os << "  T accept(" << base_name << "Visitor<T> visitor) {\n";
+  os << "    return visitor.visit" << class_name << base_name << "(*this);\n";
+  os << "  }\n";
+
   os << "\n private:\n";
   os << private_members.str();
+  os << "};\n";
+}
+
+void DefineVisitor(std::ostream& os, const std::string& base_name,
+                   const std::vector<const std::string> types) {
+  os << "\ntemplate <typename T>\n";
+  os << "class " << base_name << "Visitor {\n";
+  os << " public:\n";
+  for (auto& type : types) {
+    const size_t delimiter_location = type.find(":");
+    const std::string type_name = trim(type.substr(0, delimiter_location));
+    os << "  virtual T visit" << type_name << base_name << "(" << type_name
+       << ") = 0;\n";
+  }
   os << "};\n";
 }
 
@@ -61,7 +81,12 @@ void DefineAst(const std::string& base_name,
   os << "#define _" << file_header_temp << "_H_\n";
   os << "namespace lox {\n";
   os << "#include \"token.h\"\n";
-  os << "class " << base_name << " {\n";
+  os << "#include <variant>\n";
+  DefineVisitor(os, base_name, types);
+  os << "\nclass " << base_name << " {\n";
+  os << " public:\n";
+  os << "  template <typename T>\n";
+  os << "  virtual T accept(" << base_name << "Visitor<T> visitor) = 0;\n";
   os << "};\n";
 
   for (auto& type : types) {
