@@ -65,3 +65,12 @@ cc_library(
         ":token",
     ],
 )
+
+cc_binary(
+    name = "ast_printer",
+    srcs = ["ast_printer.cc"],
+    includes = ["."],
+    deps = [
+        ":ast",
+    ],
+)
